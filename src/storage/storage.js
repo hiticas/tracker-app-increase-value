@@ -26,3 +26,31 @@ export const getItems = async () => {
     return [];
   }
 };
+
+// Delete an item by ID
+export const deleteItem = async (id) => {
+  try {
+    const items = await getItems();
+    const newItems = items.filter(item => item.id !== id);
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newItems));
+    return newItems;
+  } catch (e) {
+    console.error('Error deleting item:', e);
+    return null;
+  }
+};
+
+// Edit an item by ID
+export const editItem = async (id, updatedFields) => {
+  try {
+    const items = await getItems();
+    const newItems = items.map(item =>
+      item.id === id ? { ...item, ...updatedFields } : item
+    );
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newItems));
+    return newItems;
+  } catch (e) {
+    console.error('Error editing item:', e);
+    return null;
+  }
+};
